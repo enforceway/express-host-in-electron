@@ -1,20 +1,22 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main');
 const path = require('path');
 const { launchDB } = require('./server/launch/launch_db');
+const ipcRenderer = require('electron').ipcRenderer
 const createWindow = () => {
-  console.log(path.join(__dirname, 'preloading.js'));
   const win = new BrowserWindow({
       width: 800,
       height: 600,
       webPreferences: {
-        preload: path.join(__dirname, 'preloading.js')
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: false,
+        nodeIntegration: false
       }
     });
     win.loadFile('index.html')
 };
 
 app.whenReady().then(() => {
-    const db = launchDB(app);
+    // const db = launchDB(app);
 
     // db.get('SELECT * FROM users', function(err, row) {
     //     if (err) {
@@ -23,14 +25,20 @@ app.whenReady().then(() => {
     //         console.log('rows:', row);
     //     }
     // });
-    console.log('数据插入开始：');
-    db.run('INSERT INTO users VALUES (?,?)', [1, 'enfo'], (err) => {
-      if (err) {
-          reject(err);
-          return;
-      }
-      console.log("数据插入结果：". err);
-    });
+    // console.log('data insert start');
+    // db.run('INSERT INTO users VALUES (?,?)', [4, 'enfo'], (err) => {
+    //   if (err) {
+    //       console.log(err);
+    //       return;
+    //   }
+    //   db.get('SELECT * FROM users', function(err, row) {
+    //     if (err) {
+    //         console.log('err:', err);
+    //     } else {
+    //         console.log('data search rows:', row);
+    //     }
+    //   });
+    // });
 
     createWindow();
 
