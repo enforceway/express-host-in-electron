@@ -1,6 +1,7 @@
 const path = require('node:path')
-const { app, BrowserWindow, Menu, child_process } = require('electron/main')
-const { launchDB } = require('./server/launch/launch_db');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron/main')
+const { spawn } = require('child_process');
+const { launchDB } = require('./main/launch/launch_db');
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -42,3 +43,22 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+ipcMain.on('start-server', (event) => {
+  console.log('ipcMain start-serverf');
+  const serverProcess = spawn('node', ['server.js'], {
+    cwd: __dirname
+  });
+
+  serverProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  serverProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  serverProcess.on('close', (code) => {
+    console.log(`子进程已退出，退出码 ${code}`);
+  });
+});

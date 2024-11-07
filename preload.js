@@ -8,6 +8,7 @@ ipcRenderer.on('db-operation-result', (result, data) => {
   callback(data);
 });
 let idx = 8;
+ipcRenderer.send('start-server');
 contextBridge.exposeInMainWorld('versions', {
     addUser: (data, callbackFn) => {
       callback = callbackFn || (() => {});

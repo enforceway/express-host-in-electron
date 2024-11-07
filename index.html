@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link href="./client/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="./client/styles/index.css" rel="stylesheet" type="text/css">
+    <meta http-equiv="Content-Security-Policy" content="connect-src 'self' http://localhost:3000">
+    <link href="./renderer/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="./renderer/styles/index.css" rel="stylesheet" type="text/css">
     <title>Hello World!</title>
   </head>
   <body>
     <div class="bookmark">
+      <h1 id="helloTag">Hello</h1>
       <!-- 书签列表 -->
       <div id="bookmarkList" class="bookmarkList">
           <h2 class="bookmarkList-title">书签列表<button id="showAddFormBtn" type="button" class="btn btn-primary btn-sm">显示添加界面</button></h2>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <!-- 添加 Bootstrap 的 JavaScript 文件 -->
-    <script src="./client/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
-    <script src="./client/scripts/display.js"></script>
+    <script src="./renderer/libs/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <script src="./renderer/scripts/display.js"></script>
   </body>
 </html>

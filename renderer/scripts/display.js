@@ -101,3 +101,9 @@ function displayBookmarks(bookmarks) {
         })(i);
     }
 }
+
+(() => {
+    window.fetch('http://localhost:3000/api/hello').then(res => {
+        res.text().then(title => document.querySelector('#helloTag').innerHTML = title);
+    });
+})();
