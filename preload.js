@@ -1,9 +1,20 @@
+
 const { contextBridge, ipcRenderer } = require('electron');
-const { interactWithDB } = require('./server/interactions/operationQueue');
-console.log('ipcRenderer:ipcRenderer:', ipcRenderer);
-let idx = 0;
+// const { operationType } = require('server/interactions/operationQueue');
+const { port1, port2 } = new MessageChannel();
+
+let callback;
+ipcRenderer.on('db-operation-result', (result, data) => {
+  callback(data);
+});
+let idx = 8;
 contextBridge.exposeInMainWorld('versions', {
-    addUser: (bookmarkInstance) => {
-        interactWithDB('db-operation', { operation: 'insert', data: { ...bookmarkInstance }})
+    addUser: (data, callbackFn) => {
+      callback = callbackFn || (() => {});
+      ipcRenderer.send('db-operation', { id: ++idx, operation: 'insert', data: { id: ++idx, ...data } });
+    },
+    getUsers: (data, callbackFn) => {
+      callback = callbackFn || (() => {});
+      ipcRenderer.send('db-operation', { id: ++idx, operation: 'select', data: data });
     }
 });

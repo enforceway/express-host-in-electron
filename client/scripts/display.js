@@ -1,37 +1,42 @@
-// 在页面加载完成时执行
-window.addEventListener('load', function() {
+function displayList() {
     document.getElementById('bookmarkForm').style.display = 'none';
     document.getElementById('bookmarkList').style.display = 'block';
-    displayBookmarks();
+};
+function displayForm() {
+    document.getElementById('bookmarkForm').style.display = 'block';
+    document.getElementById('bookmarkList').style.display = 'none';
+}
+// 在页面加载完成时执行
+window.addEventListener('load', function() {
+    displayList();
+    getAllBookmarks();
 });
 
 // 显示添加表单的按钮点击事件
 document.getElementById('showAddFormBtn').addEventListener('click', function() {
-    document.getElementById('bookmarkList').style.display = 'none';
-    document.getElementById('bookmarkForm').style.display = 'block';
+    displayForm();
 });
 
 // 关闭按钮的点击事件
 document.getElementById('closeBtn').addEventListener('click', function() {
-    document.getElementById('bookmarkForm').style.display = 'none';
-    document.getElementById('bookmarkList').style.display = 'block';
+    displayList();
 });
 
 // 保存按钮的点击事件
 document.getElementById('saveBtn').addEventListener('click', function() {
-    alert(window.versions);
-    window.versions.addUser({ name: 'enfor' });
-    return;
     var bookmarkName = document.getElementById('bookmarkName').value;
     var bookmarkUrl = document.getElementById('bookmarkUrl').value;
 
     if (bookmarkName && bookmarkUrl) {
-        window.versions.addUser({ name: bookmarkName });
+        window.versions.addUser({ name: bookmarkName, url: bookmarkUrl }, (result) => {
+            alert('书签保存成功！');
+            displayList();
+            getAllBookmarks();
+        });
         // var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
         // bookmarks.push();
         // localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
         // displayBookmarks();
-        // alert('书签保存成功！');
     } else {
         alert('请输入书签名称和 URL ！');
     }
@@ -42,11 +47,16 @@ function removeBookmark(index) {
     var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
     bookmarks.splice(index, 1);
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-    displayBookmarks();  // 重新加载书签列表
+    getAllBookmarks();  // 重新加载书签列表
+}
+function getAllBookmarks() {
+    window.versions.getUsers(null, function (data) {
+        displayBookmarks(Object.toString(data.data) === '[Object object]'? [data.data]: data.data);
+    });
 }
 
-function displayBookmarks() {
-    var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+function displayBookmarks(bookmarks) {
+    // var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
     var ul = document.getElementById('bookmarkUl');
     ul.innerHTML = '';
     for (var i = 0; i < bookmarks.length; i++) {
