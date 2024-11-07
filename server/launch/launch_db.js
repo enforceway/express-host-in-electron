@@ -14,15 +14,8 @@ ipcMain.on('db-operation', (event, data) => {
     }).catch(err => console.log(err));
 });
 
-// ipcRenderer.on('db-operation-result', (event, reply) => {
-//     console.log('db-operation-result: ', event, reply);
-//     params.callback = params.callback || (() => {});
-//     params.callback(event);
-// });
-
 function launchDB(app) {
     dbInstance = initDB(app);
-    return dbInstance;
 }
 
 module.exports = { launchDB };

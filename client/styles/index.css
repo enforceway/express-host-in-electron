@@ -1,5 +1,7 @@
 .bookmark {
     padding: 20px;
-    min-width: 400px;  
-    max-width: 500px;
+    width: 100%;
+}
+.row {
+    padding: 0 10px 10px 10px;
 }

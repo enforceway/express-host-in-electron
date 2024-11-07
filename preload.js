@@ -11,7 +11,7 @@ let idx = 8;
 contextBridge.exposeInMainWorld('versions', {
     addUser: (data, callbackFn) => {
       callback = callbackFn || (() => {});
-      ipcRenderer.send('db-operation', { id: ++idx, operation: 'insert', data: { id: ++idx, ...data } });
+      ipcRenderer.send('db-operation', { id: ++idx, operation: 'insert', data: { ...data } });
     },
     getUsers: (data, callbackFn) => {
       callback = callbackFn || (() => {});

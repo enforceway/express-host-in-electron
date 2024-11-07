@@ -33,10 +33,6 @@ document.getElementById('saveBtn').addEventListener('click', function() {
             displayList();
             getAllBookmarks();
         });
-        // var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-        // bookmarks.push();
-        // localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-        // displayBookmarks();
     } else {
         alert('请输入书签名称和 URL ！');
     }
@@ -51,20 +47,48 @@ function removeBookmark(index) {
 }
 function getAllBookmarks() {
     window.versions.getUsers(null, function (data) {
-        displayBookmarks(Object.toString(data.data) === '[Object object]'? [data.data]: data.data);
+        displayBookmarks(data.data);
     });
 }
 
 function displayBookmarks(bookmarks) {
-    // var bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-    var ul = document.getElementById('bookmarkUl');
-    ul.innerHTML = '';
+    var container = document.getElementById('bookmarkUl');
+    container.innerHTML = '';
+    if (bookmarks.length === 0) {
+        container.innerHTML = '暂无数据';
+        return;
+    }
+    var divRow, divId, divName, divUrl, divAppendix;
     for (var i = 0; i < bookmarks.length; i++) {
-        var li = document.createElement('li');
-        li.className = 'list-group-item';
+        divRow = document.createElement('div');
+        divId = document.createElement('div');
+        divName = document.createElement('div');
+        divUrl = document.createElement('div');
+        divAppendix = document.createElement('div');
+
+        divRow.appendChild(divId);
+        divRow.appendChild(divName);
+        divRow.appendChild(divUrl);
+        divRow.appendChild(divAppendix);
+
+        divId.innerText = bookmarks[i].id;
+        divName.innerText = bookmarks[i].name;
+        divUrl.innerText = bookmarks[i].url;
+
+        divRow.appendChild(divId);
+        divRow.appendChild(divName);
+        divRow.appendChild(divUrl);
+        divRow.appendChild(divAppendix);
+        
+        divRow.classList.add('row');
+        divId.classList.add('col-sm');
+        divName.classList.add('col-sm');
+        divUrl.classList.add('col-sm');
+        divAppendix.classList.add('col-sm');
+
+        container.appendChild(divRow);
 
         var text = bookmarks[i].name + ' - ' + bookmarks[i].url;
-        li.innerHTML = text;
 
         (function(index) {
             var removeBtn = document.createElement('button');
@@ -73,9 +97,7 @@ function displayBookmarks(bookmarks) {
             removeBtn.addEventListener('click', function() {
                 removeBookmark(index);
             });
-            li.appendChild(removeBtn);
+            divAppendix.appendChild(removeBtn);
         })(i);
-
-        ul.appendChild(li);
     }
 }

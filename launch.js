@@ -1,23 +1,15 @@
-const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path')
+const { app, BrowserWindow, Menu, child_process } = require('electron/main')
 const { launchDB } = require('./server/launch/launch_db');
-const { db_operation } = require('./server/interactions/dbinteract');
-
-// 在主进程中接收并处理请求
-// ipcMain.on('db-operation', (event, data) => {
-//   console.log('db-operation event:', event);
-//   params = data;
-//   db_operation(dbInstance, data).then(result => {
-//       event.reply('db-operation-result', result);
-//   }).catch(err => console.log(err));
-// });
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
-      preload: path.join(app.getAppPath(), 'preload.js')
+      nodeIntegration: false,
+      preload: path.join(app.getAppPath(), 'preload.js'),
+      contextIsolation: true
     }
   });
   const devtools = new BrowserWindow();
@@ -28,14 +20,21 @@ function createWindow () {
 }
 
 app.whenReady().then(() => {
-    const db = launchDB(app);
+  launchDB(app);
+  let myMenu = Menu.buildFromTemplate([
+    // 菜单模板内容
+  ]);
+  // 设置菜单
+  Menu.setApplicationMenu(myMenu);
   createWindow()
-
+  
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
     }
   })
+
+  myMenu = null;
 })
 
 app.on('window-all-closed', () => {
